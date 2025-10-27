@@ -10,21 +10,18 @@ public class ConsultaCep {
     public Endereco buscaEndereco(String cep) {
         String endereco = "https://viacep.com.br/ws/" + cep + "/json";
 
-        HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create(endereco))
                 .build();
 
-        HttpResponse<String> res = null;
-
         try {
-            res = HttpClient
+            HttpResponse<String> res = HttpClient
                     .newHttpClient()
                     .send(req, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
+            return new Gson().fromJson(res.body(), Endereco.class);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        return new Gson().fromJson(res.body(), Endereco.class);
     }
 }
